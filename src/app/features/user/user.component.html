@@ -1,0 +1,102 @@
+<div class="user-container">
+  <header class="user-header">
+    <h1>Área de Usuario</h1>
+    <div class="user-info" *ngIf="user$ | async as user">
+      <span class="user-greeting">Bienvenido, {{ user.username }}</span>
+      <span class="user-role-badge" [class]="'role-' + user.role.toLowerCase()">
+        {{ user.role }}
+      </span>
+    </div>
+  </header>
+
+  <main class="user-content">
+    <section class="dashboard-card">
+      <h2>Resumen de Cuenta</h2>
+      <div class="account-summary">
+        <div class="account-item">
+          <span class="label">Número de Cuenta:</span>
+          <span class="value">****4521</span>
+        </div>
+        <div class="account-item">
+          <span class="label">Saldo Actual:</span>
+          <span class="value amount">$12,450.00</span>
+        </div>
+        <div class="account-item">
+          <span class="label">Última Actualización:</span>
+          <span class="value">{{ lastUpdate | date:'medium' }}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="actions-card">
+      <h2>Operaciones Disponibles</h2>
+      <div class="actions-grid">
+        <button class="action-btn" (click)="makeTransfer()">
+          <span class="icon">↗</span>
+          <span class="label">Transferencia</span>
+        </button>
+        <button class="action-btn" (click)="viewStatements()">
+          <span class="icon">📄</span>
+          <span class="label">Estados de Cuenta</span>
+        </button>
+        <button class="action-btn" (click)="payServices()">
+          <span class="icon">💳</span>
+          <span class="label">Pagar Servicios</span>
+        </button>
+        <button class="action-btn" (click)="manageCards()">
+          <span class="icon">💳</span>
+          <span class="label">Gestionar Tarjetas</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="recent-activity-card">
+      <h2>Actividad Reciente</h2>
+      <div class="transactions-list">
+        <div class="transaction-item">
+          <div class="transaction-left">
+            <span class="transaction-type">Compra en Tienda</span>
+            <span class="transaction-date">Hoy, 14:30</span>
+          </div>
+          <div class="transaction-right">
+            <span class="transaction-amount negative">-$45.00</span>
+          </div>
+        </div>
+        <div class="transaction-item">
+          <div class="transaction-left">
+            <span class="transaction-type">Depósito</span>
+            <span class="transaction-date">Ayer, 09:15</span>
+          </div>
+          <div class="transaction-right">
+            <span class="transaction-amount positive">+$1,500.00</span>
+          </div>
+        </div>
+        <div class="transaction-item">
+          <div class="transaction-left">
+            <span class="transaction-type">Transferencia Recibida</span>
+            <span class="transaction-date">22 May, 16:45</span>
+          </div>
+          <div class="transaction-right">
+            <span class="transaction-amount positive">+$350.00</span>
+          </div>
+        </div>
+        <div class="transaction-item">
+          <div class="transaction-left">
+            <span class="transaction-type">Pago de Servicio</span>
+            <span class="transaction-date">20 May, 11:20</span>
+          </div>
+          <div class="transaction-right">
+            <span class="transaction-amount negative">-$120.00</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="user-footer">
+    <button class="logout-btn" (click)="logout()">
+      <span class="icon">🚪</span>
+      Cerrar Sesión
+    </button>
+  </footer>
+</div>

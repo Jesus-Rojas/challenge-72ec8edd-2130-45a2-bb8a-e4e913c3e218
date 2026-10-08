@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Banking Digital - Portal de Banca en Línea</title>
+  <base href="/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Portal de banca digital segura. Administra tus cuentas, realiza transferencias y consulta tus movimientos desde cualquier dispositivo.">
+  <meta name="author" content="Banking Digital Team">
+  <meta name="theme-color" content="#1976d2">
+  <meta name="robots" content="index, follow">
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      background-color: #f5f7fa;
+      color: #333;
+    }
+
+    app-root {
+      display: block;
+      min-height: 100vh;
+    }
+
+    .app-loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      z-index: 9999;
+    }
+
+    .app-loading .spinner {
+      width: 50px;
+      height: 50px;
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    .app-loading .loading-text {
+      margin-top: 20px;
+      color: white;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .browser-support-warning {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #ff9800;
+      color: white;
+      padding: 12px;
+      text-align: center;
+      font-size: 14px;
+      z-index: 10000;
+    }
+
+    @supports (display: contents) {
+      .browser-support-warning { display: none; }
+    }
+  </style>
+
+  <script>
+    (function() {
+      const isOldBrowser = !(
+        'fetch' in window &&
+        'Promise' in window &&
+        'assign' in Object &&
+        'startsWith' in String.prototype
+      );
+
+      if (isOldBrowser) {
+        document.documentElement.innerHTML = '<div style="padding:40px;text-align:center;font-family:sans-serif;"><h1>Navegador no soportado</h1><p>Por favor, actualice su navegador para usar Banking Digital.</p></div>';
+      }
+    })();
+  </script>
+</head>
+<body>
+  <app-root>
+    <div class="app-loading">
+      <div class="spinner"></div>
+      <div class="loading-text">Cargando Banking Digital...</div>
+    </div>
+  </app-root>
+  <div class="browser-support-warning">
+    Para una mejor experiencia, le recomendamos usar un navegador moderno actualizado.
+  </div>
+  <noscript>
+    <div style="padding: 40px; text-align: center; font-family: sans-serif; background: #ff5252; color: white;">
+      <h1>JavaScript Requerido</h1>
+      <p>Por favor, habilite JavaScript en su navegador para usar Banking Digital.</p>
+    </div>
+  </noscript>
+</body>
+</html>

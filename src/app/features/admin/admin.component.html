@@ -1,0 +1,234 @@
+<div class="admin-container">
+  <header class="admin-header">
+    <div class="header-content">
+      <h1>Panel de Administración</h1>
+      <div class="user-info" *ngIf="currentUser() as user">
+        <span class="user-name">{{ user.name }}</span>
+        <span class="user-role">{{ user.role }}</span>
+        <button class="logout-btn" (click)="authService.logout()">Cerrar Sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <nav class="admin-tabs">
+    <button 
+      [class.active]="selectedTab() === 'dashboard'"
+      (click)="selectTab('dashboard')">
+      Dashboard
+    </button>
+    <button 
+      [class.active]="selectedTab() === 'users'"
+      (click)="selectTab('users')">
+      Usuarios
+    </button>
+    <button 
+      [class.active]="selectedTab() === 'transactions'"
+      (click)="selectTab('transactions')">
+      Transacciones
+    </button>
+  </nav>
+
+  <main class="admin-content">
+    <div *ngIf="isLoading()" class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Cargando datos...</p>
+    </div>
+
+    <div *ngIf="!isLoading() && selectedTab() === 'dashboard'" class="dashboard-view">
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">👥</div>
+          <div class="stat-details">
+            <h3>Usuarios Totales</h3>
+            <p class="stat-value">{{ formattedStats().totalUsersFormatted }}</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">✓</div>
+          <div class="stat-details">
+            <h3>Usuarios Activos</h3>
+            <p class="stat-value">{{ formattedStats().activeUsersFormatted }}</p>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">💳</div>
+          <div class="stat-details">
+            <h3>Transacciones</h3>
+            <p class="stat-value">{{ formattedStats().transactionsFormatted }}</p>
+          </div>
+        </div>
+
+        <div class="stat-card warning">
+          <div class="stat-icon">⚠</div>
+          <div class="stat-details">
+            <h3>Usuarios Bloqueados</h3>
+            <p class="stat-value">{{ formattedStats().blockedUsersFormatted }}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="alerts-section" *ngIf="pendingApprovals() > 0">
+        <div class="alert alert-warning">
+          <span class="alert-icon">⏰</span>
+          <span>Tienes <strong>{{ pendingApprovals() }}</strong> transacciones pendientes de aprobación</span>
+          <button class="alert-action" (click)="selectTab('transactions')">Verificar</button>
+        </div>
+      </section>
+
+      <section class="recent-activity">
+        <h2>Actividad Reciente</h2>
+        <table class="transactions-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>Tipo</th>
+              <th>Monto</th>
+              <th>Estado</th>
+              <th>Fecha</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let txn of recentTransactions()">
+              <td>{{ txn.id }}</td>
+              <td>
+                <div class="user-cell">
+                  <span class="user-name">{{ txn.userName }}</span>
+                  <span class="user-id">{{ txn.userId }}</span>
+                </div>
+              </td>
+              <td>
+                <span class="txn-type" [attr.data-type]="txn.type">
+                  {{ getTransactionTypeIcon(txn.type) }} {{ txn.type }}
+                </span>
+              </td>
+              <td class="amount">{{ formatAmount(txn.amount) }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="getStatusClass(txn.status)">
+                  {{ txn.status }}
+                </span>
+              </td>
+              <td class="date">{{ formatDate(txn.date) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+    <div *ngIf="!isLoading() && selectedTab() === 'users'" class="users-view">
+      <section class="users-header">
+        <h2>Gestión de Usuarios</h2>
+        <div class="users-actions">
+          <input type="text" placeholder="Buscar usuario..." class="search-input">
+          <button class="btn-primary">Exportar</button>
+        </div>
+      </section>
+
+      <table class="users-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>USR-1234</td>
+            <td>Juan Pérez</td>
+            <td>juan.perez&#64;email.com</td>
+            <td><span class="role-badge user">USER</span></td>
+            <td><span class="status-badge status-completed">Activo</span></td>
+            <td>
+              <button class="btn-action" (click)="blockUser('USR-1234')">Bloquear</button>
+            </td>
+          </tr>
+          <tr>
+            <td>USR-5678</td>
+            <td>María García</td>
+            <td>maria.garcia&#64;email.com</td>
+            <td><span class="role-badge user">USER</span></td>
+            <td><span class="status-badge status-completed">Activo</span></td>
+            <td>
+              <button class="btn-action" (click)="blockUser('USR-5678')">Bloquear</button>
+            </td>
+          </tr>
+          <tr>
+            <td>USR-9012</td>
+            <td>Carlos López</td>
+            <td>carlos.lopez&#64;email.com</td>
+            <td><span class="role-badge admin">ADMIN</span></td>
+            <td><span class="status-badge status-completed">Activo</span></td>
+            <td>
+              <button class="btn-action" disabled>Admin</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!isLoading() && selectedTab() === 'transactions'" class="transactions-view">
+      <section class="transactions-header">
+        <h2>Gestión de Transacciones</h2>
+        <div class="transactions-filters">
+          <select class="filter-select">
+            <option value="">Todos los estados</option>
+            <option value="completed">Completadas</option>
+            <option value="pending">Pendientes</option>
+            <option value="failed">Fallidas</option>
+          </select>
+          <input type="date" class="date-input">
+        </div>
+      </section>
+
+      <table class="transactions-table full">
+        <thead>
+          <tr>
+            <th>ID Transacción</th>
+            <th>Usuario</th>
+            <th>Tipo de Operación</th>
+            <th>Monto</th>
+            <th>Estado</th>
+            <th>Fecha y Hora</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let txn of recentTransactions()">
+            <td class="txn-id">{{ txn.id }}</td>
+            <td>
+              <div class="user-cell">
+                <span>{{ txn.userName }}</span>
+                <small>{{ txn.userId }}</small>
+              </div>
+            </td>
+            <td>
+              <span class="txn-type-badge" [attr.data-type]="txn.type">
+                {{ getTransactionTypeIcon(txn.type) }} {{ txn.type | titlecase }}
+              </span>
+            </td>
+            <td class="amount-cell">{{ formatAmount(txn.amount) }}</td>
+            <td>
+              <span class="status-badge" [ngClass]="getStatusClass(txn.status)">
+                {{ txn.status | titlecase }}
+              </span>
+            </td>
+            <td class="date-cell">{{ formatDate(txn.date) }}</td>
+            <td class="actions-cell">
+              <ng-container *ngIf="txn.status === 'pending'">
+                <button class="btn-approve" (click)="approveTransaction(txn.id)">Aprobar</button>
+                <button class="btn-reject" (click)="rejectTransaction(txn.id)">Rechazar</button>
+              </ng-container>
+              <span *ngIf="txn.status !== 'pending'" class="no-actions">-</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+</div>

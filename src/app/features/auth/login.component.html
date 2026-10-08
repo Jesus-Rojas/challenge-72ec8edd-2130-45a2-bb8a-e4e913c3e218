@@ -1,0 +1,109 @@
+<div class="login-container">
+  <div class="login-card">
+    <div class="login-header">
+      <div class="logo-container">
+        <span class="bank-logo">🏦</span>
+        <h1>Banca Digital</h1>
+      </div>
+      <p class="login-subtitle">Ingresa a tu cuenta para continuar</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+      <div class="form-group">
+        <label for="username" class="form-label">Usuario</label>
+        <div class="input-wrapper">
+          <span class="input-icon">👤</span>
+          <input
+            id="username"
+            type="text"
+            formControlName="username"
+            class="form-input"
+            [class.error]="username?.invalid && username?.touched"
+            [class.valid]="username?.valid && username?.touched"
+            placeholder="Ingresa tu usuario"
+            autocomplete="username"
+            (input)="clearError()"
+          />
+        </div>
+        <div class="error-text" *ngIf="username?.invalid && username?.touched">
+          <span *ngIf="username?.errors?.['required']">El usuario es requerido</span>
+          <span *ngIf="username?.errors?.['minlength']">El usuario debe tener al menos 3 caracteres</span>
+          <span *ngIf="username?.errors?.['maxlength']">El usuario no puede exceder 50 caracteres</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="password" class="form-label">Contraseña</label>
+        <div class="input-wrapper">
+          <span class="input-icon">🔒</span>
+          <input
+            id="password"
+            [type]="showPassword() ? 'text' : 'password'"
+            formControlName="password"
+            class="form-input"
+            [class.error]="password?.invalid && password?.touched"
+            [class.valid]="password?.valid && password?.touched"
+            placeholder="Ingresa tu contraseña"
+            autocomplete="current-password"
+            (input)="clearError()"
+          />
+          <button
+            type="button"
+            class="toggle-password"
+            (click)="togglePasswordVisibility()"
+            [attr.aria-label]="showPassword() ? 'Ocultar contraseña' : 'Mostrar contraseña'"
+          >
+            {{ showPassword() ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        <div class="error-text" *ngIf="password?.invalid && password?.touched">
+          <span *ngIf="password?.errors?.['required']">La contraseña es requerida</span>
+          <span *ngIf="password?.errors?.['minlength']">La contraseña debe tener al menos 6 caracteres</span>
+          <span *ngIf="password?.errors?.['maxlength']">La contraseña no puede exceder 100 caracteres</span>
+        </div>
+      </div>
+
+      <div class="error-message" *ngIf="errorMessage()">
+        <span class="error-icon">⚠️</span>
+        <span>{{ errorMessage() }}</span>
+      </div>
+
+      <button
+        type="submit"
+        class="login-button"
+        [disabled]="isLoading()"
+        [class.loading]="isLoading()"
+      >
+        <span *ngIf="!isLoading()">Iniciar Sesión</span>
+        <span *ngIf="isLoading()" class="loading-spinner">
+          <span class="spinner"></span>
+          Verificando...
+        </span>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <a href="#" class="footer-link">¿Olvidaste tu contraseña?</a>
+      <span class="separator">|</span>
+      <a href="#" class="footer-link">Regístrate</a>
+    </div>
+
+    <div class="demo-credentials">
+      <p class="demo-title">Credenciales de prueba:</p>
+      <div class="credential-item">
+        <span class="credential-label">Usuario:</span>
+        <code>admin</code>
+        <span class="credential-role">admin</span>
+      </div>
+      <div class="credential-item">
+        <span class="credential-label">Usuario:</span>
+        <code>user</code>
+        <span class="credential-role">user</span>
+      </div>
+      <div class="credential-item">
+        <span class="credential-label">Contraseña:</span>
+        <code>password123</code>
+      </div>
+    </div>
+  </div>
+</div>
