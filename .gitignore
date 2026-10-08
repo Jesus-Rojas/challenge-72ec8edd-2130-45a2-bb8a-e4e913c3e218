@@ -1,0 +1,8 @@
+.pragma/
+.kiro/
+output/
+
+node_modules
+dist/
+out-tsc/
+.angular/

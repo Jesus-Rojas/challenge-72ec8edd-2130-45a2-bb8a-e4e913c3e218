@@ -40,7 +40,7 @@ interface UserNotification {
         <div class="header-content">
           <h1>Mi Área Personal</h1>
           <div class="user-info" *ngIf="currentUser() as user">
-            <span class="welcome-message">Bienvenido, {{ user.name }}</span>
+            <span class="welcome-message">Bienvenido, {{ user.username }}</span>
             <button class="logout-btn" (click)="authService.logout()">Cerrar Sesión</button>
           </div>
         </div>
@@ -203,7 +203,7 @@ interface UserNotification {
   `
 })
 export class UserComponent implements OnInit {
-  private readonly authService = inject(AuthService);
+  readonly authService = inject(AuthService);
   
   readonly currentUser = signal<User | null>(null);
   readonly isLoading = signal<boolean>(false);

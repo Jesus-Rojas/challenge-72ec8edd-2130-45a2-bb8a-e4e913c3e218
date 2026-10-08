@@ -11,16 +11,7 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () => import('./features/auth/login.component').then(m => m.LoginComponent),
-    canActivate: [
-      (() => {
-        const guard = new AuthGuard(
-          inject(AuthService),
-          inject(Router)
-        );
-        return guard.canActivate;
-      }) as any
-    ]
+    loadComponent: () => import('./features/auth/login.component').then(m => m.LoginComponent)
   },
   {
     path: 'user',
@@ -37,32 +28,9 @@ export const routes: Routes = [
     canActivate: [AuthGuard, RoleGuard],
     data: {
       expectedRole: UserRole.ADMIN,
+      requiredRole: UserRole.ADMIN,
       requiresAuth: true,
       requiredPermissions: ['canManageUsers', 'canViewTransactions']
-    }
-  },
-  {
-    path: 'dashboard',
-    loadComponent: () => import('./features/dashboard/dashboard.component').then(m => m.DashboardComponent),
-    canActivate: [AuthGuard],
-    data: {
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'accounts',
-    loadComponent: () => import('./features/accounts/accounts.component').then(m => m.AccountsComponent),
-    canActivate: [AuthGuard],
-    data: {
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'transactions',
-    loadComponent: () => import('./features/transactions/transactions.component').then(m => m.TransactionsComponent),
-    canActivate: [AuthGuard],
-    data: {
-      requiresAuth: true
     }
   },
   {
@@ -70,7 +38,3 @@ export const routes: Routes = [
     redirectTo: 'login'
   }
 ];
-
-import { inject } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from './core/services/auth.service';

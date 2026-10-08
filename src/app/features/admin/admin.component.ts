@@ -27,7 +27,7 @@ interface TransactionRecord {
   templateUrl: './admin.component.html'
 })
 export class AdminComponent implements OnInit {
-  private readonly authService = inject(AuthService);
+  readonly authService = inject(AuthService);
   
   readonly currentUser = signal<User | null>(null);
   readonly isLoading = signal<boolean>(false);
