@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthService } from '../../core/services/auth.service';
+import { AuthService, UserRole } from '../../core/services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -67,15 +67,12 @@ export class LoginComponent {
 
   private handleSuccessfulLogin(): void {
     const user = this.authService.currentUser;
-    if (user) {
-      if (user.role === 'admin') {
-        this.router.navigate(['/admin']);
-      } else {
-        this.router.navigate(['/user']);
-      }
-    } else {
+    if (!user) {
       this.router.navigate(['/user']);
+      return;
     }
+    const navigateTo = user.role === UserRole.ADMIN ? '/admin' : '/user';
+    this.router.navigate([navigateTo]);
   }
 
   clearError(): void {
